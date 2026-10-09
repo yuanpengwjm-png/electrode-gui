@@ -1,0 +1,698 @@
+{
+  "ok": true,
+  "synthetic": true,
+  "real_hardware_verified": false,
+  "history": [
+    {
+      "elapsed": 0.25,
+      "states": {}
+    },
+    {
+      "elapsed": 0.5,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 0.8130000000001019,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 1.0630000000001019,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 1.3130000000001019,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 1.594000000000051,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 1.875,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 2.125,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 2.375,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 2.625,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 2.875,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 3.188000000000102,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 3.438000000000102,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 3.688000000000102,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 3.938000000000102,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 4.188000000000102,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 4.469000000000051,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 4.719000000000051,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 4.969000000000051,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 5.219000000000051,
+      "states": {
+        "C11": "gray",
+        "C12": "gray"
+      }
+    },
+    {
+      "elapsed": 5.469000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 5.719000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 5.969000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 6.219000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 6.469000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 6.719000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 6.984000000000378,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 7.234000000000378,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 7.530999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 7.780999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 8.030999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 8.280999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 8.530999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 8.780999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 9.030999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 9.280999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 9.530999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 9.780999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 10.030999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 10.280999999999949,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 10.563000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 10.813000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 11.063000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 11.313000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 11.563000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 11.813000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 12.063000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 12.313000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 12.563000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 12.813000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 13.063000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 13.313000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 13.563000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 13.813000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 14.063000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 14.313000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 14.563000000000102,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 14.844000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 15.094000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 15.344000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 15.594000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 15.844000000000051,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 16.09400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 16.34400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 16.59400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 16.84400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 17.09400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 17.34400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 17.59400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 17.84400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 18.09400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 18.34400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 18.59400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 18.84400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 19.09400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 19.34400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 19.59400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 19.84400000000005,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 20.14100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 20.375,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 20.64100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 20.89100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 21.14100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 21.39100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 21.64100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 21.89100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 22.14100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 22.39100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 22.64100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 22.89100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 23.14100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "red"
+      }
+    },
+    {
+      "elapsed": 23.39100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 23.64100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 23.89100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 24.14100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 24.39100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 24.64100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 24.89100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    },
+    {
+      "elapsed": 25.14100000000053,
+      "states": {
+        "C11": "green",
+        "C12": "green"
+      }
+    }
+  ],
+  "errors": []
+}

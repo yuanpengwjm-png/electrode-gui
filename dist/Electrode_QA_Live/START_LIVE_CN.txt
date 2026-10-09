@@ -1,0 +1,23 @@
+电极 GUI — 实时 LSL 正弦台架版
+
+保持 EXE 和 _internal 文件夹完整。
+
+最简单：双击 Start_Live.cmd 直接打开实时窗口。
+完整GUI：双击 Electrode_QA_Live.exe，点击右上角 Live LSL · Sine。
+
+1. ActiView 开始采集。
+2. Search LSL → 选择ActiView流 → Connect。
+3. 选择实际接入的C11/C12，确认通道映射和数据单位。
+4. 填5 Hz / 10 mVpp；核实实际输入后勾选 input Vpp verified。
+5. Start monitoring；默认5秒窗口、每1秒重新检查。
+
+绿：已评估检查符合阈值；黄：需核对；红：信号异常需检查；灰：没有当前评估。
+点击电极可看波形和原因。Live 3D torso显示同样结果。
+Save window + log 保存选中通道的数据、结果和状态变化。
+
+先体验：SYNTHETIC demo + amplitude fault
+C12会在模拟8–18秒期间降低幅值，颜色自动变红，恢复后重新变绿。
+黄色模拟横幅表示不是设备数据。
+
+详细说明：README_LIVE_CN.md（可用记事本打开）
+默认通过条件不是物理损坏诊断，红色只表示应检查该信号通路。

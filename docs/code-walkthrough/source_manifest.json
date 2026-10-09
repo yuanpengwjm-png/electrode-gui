@@ -1,0 +1,366 @@
+{
+  "generated_local": "2026-09-30T15:41:38",
+  "files": [
+    {
+      "file": ".vscode/extensions.json",
+      "source_lines": 1,
+      "sha256": "a9529b5c692a79e95d8ad4e631875bae0eb21e5901123d55d7ef6a21e7b41f6e",
+      "document": ".vscode__extensions.json.md",
+      "document_rows": 1,
+      "nonblank": 1
+    },
+    {
+      "file": ".vscode/launch.json",
+      "source_lines": 23,
+      "sha256": "2fb29491222f4c274419501f15e2c79c8d992184b69c17aba501795df8e0cb40",
+      "document": ".vscode__launch.json.md",
+      "document_rows": 23,
+      "nonblank": 23
+    },
+    {
+      "file": ".vscode/settings.json",
+      "source_lines": 7,
+      "sha256": "c93584417a1308fb589d005894d5bbf3a97b20f974670ed8e05dcdc18c963f07",
+      "document": ".vscode__settings.json.md",
+      "document_rows": 7,
+      "nonblank": 7
+    },
+    {
+      "file": ".vscode/tasks.json",
+      "source_lines": 14,
+      "sha256": "64b84f42245175973925331a2e73ebf341b92ccd328695fbc01c5615717962db",
+      "document": ".vscode__tasks.json.md",
+      "document_rows": 14,
+      "nonblank": 14
+    },
+    {
+      "file": "Electrode-QA.code-workspace",
+      "source_lines": 4,
+      "sha256": "17c76c769829941cd3f69e6883fd1819323caadc382c9441b1d2fbd35be31c29",
+      "document": "Electrode-QA.code-workspace.md",
+      "document_rows": 4,
+      "nonblank": 4
+    },
+    {
+      "file": "config.py",
+      "source_lines": 104,
+      "sha256": "41b6482165de7b0c0c081f07c32d2ddadede8324cd2b98d039a6ce3259322ddf",
+      "document": "config.py.md",
+      "document_rows": 104,
+      "nonblank": 99
+    },
+    {
+      "file": "gui.py",
+      "source_lines": 923,
+      "sha256": "0989458b95202aca0b7200f55a0ea205d13364817f0b52ec53d3e12201f88ffd",
+      "document": "gui.py.md",
+      "document_rows": 923,
+      "nonblank": 874
+    },
+    {
+      "file": "main.py",
+      "source_lines": 62,
+      "sha256": "db247bcca69beb9a790ea451500b20d73610810904716f1dd994c15c768715ba",
+      "document": "main.py.md",
+      "document_rows": 62,
+      "nonblank": 58
+    },
+    {
+      "file": "models.py",
+      "source_lines": 123,
+      "sha256": "9cf5ff8a3f2dbf0e58a264f565a893e132c9736cbbf40d2b9abe3cffa75b63e5",
+      "document": "models.py.md",
+      "document_rows": 123,
+      "nonblank": 107
+    },
+    {
+      "file": "modules/__init__.py",
+      "source_lines": 1,
+      "sha256": "5821ff1ae0b549ceef4fce05cfa4bc5d741f244eea0e80f9a34fc384a0a01d5e",
+      "document": "modules____init__.py.md",
+      "document_rows": 1,
+      "nonblank": 1
+    },
+    {
+      "file": "modules/bench_spectrum.py",
+      "source_lines": 87,
+      "sha256": "24d0433c4f62717d318da824cc378a18b5c73ad5e52246a60e028f7dfe20c2e3",
+      "document": "modules__bench_spectrum.py.md",
+      "document_rows": 87,
+      "nonblank": 80
+    },
+    {
+      "file": "modules/ecg_quality.py",
+      "source_lines": 143,
+      "sha256": "98ae5c27723c9d8dec061a32e6f5d6344894947e8c44f88018f0bc6dc6fe0953",
+      "document": "modules__ecg_quality.py.md",
+      "document_rows": 143,
+      "nonblank": 127
+    },
+    {
+      "file": "modules/gain_error.py",
+      "source_lines": 23,
+      "sha256": "9036a55f9a2426f56e5ff062ea7926288cf777b16448729f0942d80bd56ad7f9",
+      "document": "modules__gain_error.py.md",
+      "document_rows": 23,
+      "nonblank": 20
+    },
+    {
+      "file": "modules/linearity.py",
+      "source_lines": 34,
+      "sha256": "fb1547afd0f55c01bceff8fceef862cc438efa02b077bc39e6a6ef37802b4bf9",
+      "document": "modules__linearity.py.md",
+      "document_rows": 34,
+      "nonblank": 31
+    },
+    {
+      "file": "modules/pulse_analyzer.py",
+      "source_lines": 55,
+      "sha256": "6ed09cb1d7586c10aa4de3a9064755f525942fb5dc74fb369c8cbed15723a155",
+      "document": "modules__pulse_analyzer.py.md",
+      "document_rows": 55,
+      "nonblank": 51
+    },
+    {
+      "file": "modules/repeatability.py",
+      "source_lines": 55,
+      "sha256": "bc866a0fc09cc6f0540f5addc9f733949b7b17b81a2cfe410a6e21b7d9957d75",
+      "document": "modules__repeatability.py.md",
+      "document_rows": 55,
+      "nonblank": 52
+    },
+    {
+      "file": "modules/sine_fitter.py",
+      "source_lines": 17,
+      "sha256": "1ebb6617c8679760a196e0315d6f3fba3b2fbac3bc14497d6597ee015df03f7f",
+      "document": "modules__sine_fitter.py.md",
+      "document_rows": 17,
+      "nonblank": 14
+    },
+    {
+      "file": "modules/time_synchronization.py",
+      "source_lines": 121,
+      "sha256": "ef0de32e8c22682e7cd0de1b42cf4a9a4c60298c1323a9b534c8bc0f44a290a6",
+      "document": "modules__time_synchronization.py.md",
+      "document_rows": 121,
+      "nonblank": 113
+    },
+    {
+      "file": "modules/windowing.py",
+      "source_lines": 25,
+      "sha256": "4cd3ce728eb315ff9a3d64a9dcd02396c045f3887f0fcbed77fafcaf302500cc",
+      "document": "modules__windowing.py.md",
+      "document_rows": 25,
+      "nonblank": 22
+    },
+    {
+      "file": "requirements.txt",
+      "source_lines": 3,
+      "sha256": "48061e7fa7686b876b0221aaf663c6576c4aacc7227c1bb192d6250c5d037494",
+      "document": "requirements.txt.md",
+      "document_rows": 3,
+      "nonblank": 3
+    },
+    {
+      "file": "services/__init__.py",
+      "source_lines": 1,
+      "sha256": "72e50ab45774a87212e54e8c477a969b39bbfb7745592fbe252286731187c645",
+      "document": "services____init__.py.md",
+      "document_rows": 1,
+      "nonblank": 1
+    },
+    {
+      "file": "services/analysis_service.py",
+      "source_lines": 210,
+      "sha256": "77e8fb890ebc8aea4c3d5a6c5a8d08986001e30d28184ccfaa79c821f90b7974",
+      "document": "services__analysis_service.py.md",
+      "document_rows": 210,
+      "nonblank": 201
+    },
+    {
+      "file": "services/demo_data.py",
+      "source_lines": 77,
+      "sha256": "55c82ce66242d579e1dab2b62616276b887b759863242c296f37958f8495a0d9",
+      "document": "services__demo_data.py.md",
+      "document_rows": 77,
+      "nonblank": 71
+    },
+    {
+      "file": "tests/test_analysis.py",
+      "source_lines": 189,
+      "sha256": "195c57d2a59a08dedc2a42a04156122f21dbe61c9527be53353b47309e81c258",
+      "document": "tests__test_analysis.py.md",
+      "document_rows": 189,
+      "nonblank": 173
+    },
+    {
+      "file": "tests/test_large_bdf.py",
+      "source_lines": 112,
+      "sha256": "5f23308a7c1647a8a36826e34bce32e3b45a1b5fbe904007a7f0d8e30ece58df",
+      "document": "tests__test_large_bdf.py.md",
+      "document_rows": 112,
+      "nonblank": 104
+    },
+    {
+      "file": "tests/test_record_scope.py",
+      "source_lines": 130,
+      "sha256": "f73a7c576742f609d4d59ef7c5b7ecc0d8f4846cc3e2110124c4b8e386b6f432",
+      "document": "tests__test_record_scope.py.md",
+      "document_rows": 130,
+      "nonblank": 120
+    },
+    {
+      "file": "tests/test_stages.py",
+      "source_lines": 142,
+      "sha256": "9c906d19017c3a9d6ea50eb5ca553f7caa116ac9161eb684a01b4e68a522be6e",
+      "document": "tests__test_stages.py.md",
+      "document_rows": 142,
+      "nonblank": 129
+    },
+    {
+      "file": "tests/test_tail_exclusion.py",
+      "source_lines": 153,
+      "sha256": "c18b8efff5dc57e3ce5af242f0229fb4022be5ad817c3aa2fecf0ae7f2829334",
+      "document": "tests__test_tail_exclusion.py.md",
+      "document_rows": 153,
+      "nonblank": 142
+    },
+    {
+      "file": "tests/test_torso.py",
+      "source_lines": 167,
+      "sha256": "f836d6c309e3e1a8e96a7ba39318c98c10686ce19c709cef997156273c71b91c",
+      "document": "tests__test_torso.py.md",
+      "document_rows": 167,
+      "nonblank": 157
+    },
+    {
+      "file": "tests/test_windows.py",
+      "source_lines": 163,
+      "sha256": "2b6286b723320d7d90def09c3c22b3785ab0c14ea9e51d7279a6a95ba9831756",
+      "document": "tests__test_windows.py.md",
+      "document_rows": 163,
+      "nonblank": 149
+    },
+    {
+      "file": "utils/__init__.py",
+      "source_lines": 1,
+      "sha256": "e77bf84f594ce32ac9b705b6ff37fb5c510e360690b0f9ea8f41588977acebf1",
+      "document": "utils____init__.py.md",
+      "document_rows": 1,
+      "nonblank": 1
+    },
+    {
+      "file": "utils/array_store.py",
+      "source_lines": 59,
+      "sha256": "3ac0e3d4cbc0947ccb7b402c7c6cf411590af1750b9c8fed703d8513a507f7ca",
+      "document": "utils__array_store.py.md",
+      "document_rows": 59,
+      "nonblank": 54
+    },
+    {
+      "file": "utils/bdf_reader.py",
+      "source_lines": 90,
+      "sha256": "76636e2bef2c5da21f23dc09029c38660d087e74ab91e7127229ed275ff16e27",
+      "document": "utils__bdf_reader.py.md",
+      "document_rows": 90,
+      "nonblank": 80
+    },
+    {
+      "file": "utils/centered_channels.py",
+      "source_lines": 23,
+      "sha256": "f297dddbc5a0c9b1c5f78b148a6c8f5724b19929994599954537cbc910dcb517",
+      "document": "utils__centered_channels.py.md",
+      "document_rows": 23,
+      "nonblank": 18
+    },
+    {
+      "file": "utils/demo_bdf.py",
+      "source_lines": 30,
+      "sha256": "677e472969f7c7cce85c8cbe0ed677fa8842a061d503900817c78e7db644e1b1",
+      "document": "utils__demo_bdf.py.md",
+      "document_rows": 30,
+      "nonblank": 29
+    },
+    {
+      "file": "utils/input_catalog.py",
+      "source_lines": 32,
+      "sha256": "89b09edb222c57c4ea7dfb875f60ffce7c717f350350bcccc17959bdfdb6ce08",
+      "document": "utils__input_catalog.py.md",
+      "document_rows": 32,
+      "nonblank": 30
+    },
+    {
+      "file": "utils/numerics.py",
+      "source_lines": 142,
+      "sha256": "fb7db8d9378c06d97e8ea6b2c8c8c964408192e606ac3d860150a4bde83475e0",
+      "document": "utils__numerics.py.md",
+      "document_rows": 142,
+      "nonblank": 133
+    },
+    {
+      "file": "utils/project_io.py",
+      "source_lines": 51,
+      "sha256": "aa7d43d81d4fef446a317dd46fc4e20fad22e472a6111459a7845db4310f8d44",
+      "document": "utils__project_io.py.md",
+      "document_rows": 51,
+      "nonblank": 46
+    },
+    {
+      "file": "utils/report_exporter.py",
+      "source_lines": 100,
+      "sha256": "82356ba29eb87b3491f8dc7137deb1d77d20985eeb5cd82ae281d42e6659d9d1",
+      "document": "utils__report_exporter.py.md",
+      "document_rows": 100,
+      "nonblank": 96
+    },
+    {
+      "file": "views/__init__.py",
+      "source_lines": 1,
+      "sha256": "e413d74b698422249c1d1c9e976df93633cf26b6de0411e5ddae34bb35abd251",
+      "document": "views____init__.py.md",
+      "document_rows": 1,
+      "nonblank": 1
+    },
+    {
+      "file": "views/heatmap_view.py",
+      "source_lines": 85,
+      "sha256": "7100475c854dd9a2aaf248b9feb5460953a8e2b9fbcfb8669424f7d9bb583b03",
+      "document": "views__heatmap_view.py.md",
+      "document_rows": 85,
+      "nonblank": 77
+    },
+    {
+      "file": "views/timeline_view.py",
+      "source_lines": 160,
+      "sha256": "89d79813ad91c4a52432e0dbd2d78e4b515eb73ad19299161bc1ba0abdafaf1c",
+      "document": "views__timeline_view.py.md",
+      "document_rows": 160,
+      "nonblank": 144
+    },
+    {
+      "file": "views/torso_geometry.py",
+      "source_lines": 91,
+      "sha256": "d3d91daadcc2e2d65f8ff6ec3036ad57c8768583aa835c5914110d0cd8da594b",
+      "document": "views__torso_geometry.py.md",
+      "document_rows": 91,
+      "nonblank": 77
+    },
+    {
+      "file": "views/torso_view.py",
+      "source_lines": 165,
+      "sha256": "183c0c1e8b16cb36105dde7da9fcafc41f6a95b82160cc33e54e51030ff0c8af",
+      "document": "views__torso_view.py.md",
+      "document_rows": 165,
+      "nonblank": 149
+    },
+    {
+      "file": "views/torso_window.py",
+      "source_lines": 145,
+      "sha256": "5c564b13cc1c8d756932a24b905d2b611feff9f9eb6339f0096d559be49bbe70",
+      "document": "views__torso_window.py.md",
+      "document_rows": 145,
+      "nonblank": 133
+    }
+  ],
+  "source_lines": 4344
+}
