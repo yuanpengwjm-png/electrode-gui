@@ -18,20 +18,29 @@ class LiveConfig:
     input_confirmed: bool = False
     mapping_confirmed: bool = False
     limits: AnalysisSettings = field(default_factory=lambda: AnalysisSettings(exclude_last_s=0))
+    profile: str = 'sine'
 
     def validate(self, rate):
         self.limits.validate()
-        for value in (self.frequency_hz, self.input_mVpp, self.window_s, self.hop_s, rate):
+        if self.profile not in ('sine', 'ecg'):
+            raise ValueError('Choose ECG quality or known-sine input.')
+        values = (self.window_s, self.hop_s, rate)
+        if self.profile == 'sine':
+            values += (self.frequency_hz, self.input_mVpp)
+        for value in values:
             if not math.isfinite(value) or value <= 0:
                 raise ValueError('Frequency, amplitude, window, step and sample rate must be positive finite numbers.')
         if not 2 <= self.window_s <= 10 or self.hop_s > self.window_s:
             raise ValueError('Use a 2–10 s window, with step no longer than the window.')
-        if self.frequency_hz >= rate/4 or self.frequency_hz*self.window_s < self.limits.min_cycles:
+        if self.profile == 'ecg':
+            if rate < 100 or self.window_s < 4:
+                raise ValueError('ECG quality needs at least 100 Hz and a 4–10 s window (10 s recommended).')
+        elif self.frequency_hz >= rate/4 or self.frequency_hz*self.window_s < self.limits.min_cycles:
             raise ValueError('Need at least four samples/cycle and the configured minimum cycles/window.')
 
 
 def electrode(name, metrics):
-    na = MetricResult('yellow', 'Not assessed in this live sine screen')
+    na = MetricResult('yellow', 'Not assessed in this live screen')
     return ElectrodeResult(name, metrics.get('gain', na), na, na, na, extra=metrics)
 
 
@@ -126,6 +135,45 @@ def analyze_sine_window(samples, timestamps, names, scales, rate, config):
                               thd_pct=extra['thd'].values.get('thd_pct'), snr_db=extra['snr'].values.get('snr_db'))
         components['live'] = summary
         results.append(electrode(name, components))
+    return dict(electrodes=results, elapsed_s=time.monotonic()-started, valid=True,
+                reason='', start_s=float(timestamps[0]), end_s=float(timestamps[-1]))
+
+
+def analyze_live_window(samples, timestamps, names, scales, rate, config):
+    if config.profile == 'sine':
+        return analyze_sine_window(samples, timestamps, names, scales, rate, config)
+    from modules.ecg_quality import ECGQualityAnalyzer
+    import copy
+    started = time.monotonic()
+    config.validate(rate)
+    samples = np.asarray(samples, float)
+    if samples.shape != (len(timestamps), len(names)) or len(scales) != len(names):
+        raise ValueError('Channel dimensions do not match the received data')
+    if len(set(names)) != len(names) or any(not n.strip() for n in names):
+        raise ValueError('Monitored channels need unique labels')
+    problem = frame_problem(timestamps, rate, config.window_s)
+    if problem:
+        return dict(electrodes=unavailable(names, problem), elapsed_s=0., valid=False,
+                    reason=problem, start_s=None, end_s=None)
+    settings = copy.deepcopy(config.limits)
+    settings.ecg_window_s = config.window_s
+    settings.ecg_hop_s = config.hop_s
+    analyzer = ECGQualityAnalyzer(settings)
+    results = []
+    for i, name in enumerate(names):
+        scale = scales[i]
+        if not config.mapping_confirmed:
+            results.extend(unavailable([name], 'Verify physical channel mapping first', 'yellow'))
+        elif scale is None or not np.isfinite(scale) or scale <= 0:
+            results.extend(unavailable([name], 'Voltage unit unknown: confirm conversion', 'yellow'))
+        elif not np.isfinite(samples[:,i]).all():
+            results.extend(unavailable([name], 'Missing / non-finite signal samples', 'red'))
+        else:
+            metrics = analyzer.analyze_window(samples[:,i]*scale, rate)
+            metrics['integrity'].message += '; ADC rail limits unavailable: clipping not assessed'
+            metrics['live'] = copy.deepcopy(metrics['ecg_quality'])
+            metrics['live'].message += '; prototype quality criteria, not an electrode-damage diagnosis'
+            results.append(electrode(name, metrics))
     return dict(electrodes=results, elapsed_s=time.monotonic()-started, valid=True,
                 reason='', start_s=float(timestamps[0]), end_s=float(timestamps[-1]))
 

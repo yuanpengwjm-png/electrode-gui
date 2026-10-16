@@ -1,19 +1,22 @@
-# Electrode QA - two-stage BDF desktop application
+# Electrode QA - Real-time / Post analysis
 
-English Tkinter GUI for offline acquisition-chain validation and ECG channel screening, with an optional live LSL sine-bench monitor.
-For the live workflow, see [README_LIVE_CN.md](README_LIVE_CN.md). The header button **Live LSL · Sine** opens a separate real-time screen using the same grid and torso views. Offline and live results remain explicitly identified.
+English Tkinter GUI with peer Real-time and Post analysis entry points. Real-time defaults to ECG quality screening, with an optional known-sine mode. CT noise analysis is a separate application in `../noise-analysis`; launch its `Start_Noise_Analysis.cmd`.
+See [current workflow](REALTIME_POST_GUIDE.md), [Git / setup guide](GIT_SETUP_CN.md), and [deployment findings for review](DEPLOYMENT_REVIEW_CN.md).
 For a complete Chinese explanation of the architecture, formulas, callbacks and classes, read [CODE_GUIDE_ZH.md](CODE_GUIDE_ZH.md).
 
 ## Run in VS Code
 
-Open `Electrode-QA.code-workspace`, select Python 3.10+ with the dependencies installed, and run `gui.py` (F5):
+Open this repository folder or `Electrode-QA.code-workspace`. On a new Windows checkout, install Python 3.10+ (3.12 recommended), then run `Setup_Environment.cmd` once. This creates the ignored local `.venv` and installs `requirements_live.txt`, including pylsl. Select `.venv/Scripts/python.exe` in VS Code and press F5 with **Electrode QA - Real-time / Post** selected. Equivalent commands:
 
 ```powershell
-python -m pip install -r requirements.txt
-python gui.py
+py -3 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements_live.txt
+.\.venv\Scripts\python.exe live_main.py
 ```
 
-Tkinter normally ships with Python on Windows. No live ActiView connection is needed.
+`Start_Electrode_QA.cmd` also starts the mode selector; `Start_Live.cmd` opens Real-time directly. Tkinter normally ships with Python on Windows. Post analysis needs no live ActiView connection. Real-time requires an LSL outlet and verified channel/unit mapping. Existing `dist/` executables have not been rebuilt with these source changes.
+
+Running `gui.py` with VS Code's **Run Python File** also opens the Real-time / Post selector, just like `main.py` without arguments. If this existing lab checkout has no `.venv`, use **Python: Select Interpreter → Enter interpreter path** and select `../.venv-lsl/Scripts/python.exe`. A fresh clone should use `Setup_Environment.cmd` to create its own `.venv`.
 
 ## Three analysis paths
 
@@ -30,8 +33,8 @@ ECG and pulse signals are never passed through the sine-fit path. Declared wavef
 1. Choose the analysis workflow.
 2. Open BDF or ZIP files, or choose a Latest lab preset and click Load.
 3. Verify the declared waveform and physical setup group.
-4. For bench data, enter actual input frequency and amplitude. Only mark the input verified after calibration. Pulse inputs must be peak-to-peak; peak/RMS conversions are sine-specific.
-5. Choose actual BDF channels and electrode count. Latest lab presets select A1-A10 or A1-D32, not EXG by default. Verify wiring.
+4. For bench data, enter actual input frequency and amplitude. The GUI uses the entered amplitude and units automatically; no confirmation checkbox is required. Pulse inputs must be peak-to-peak; peak/RMS conversions are sine-specific.
+5. Use Choose channels to select the actual connected BDF channels, or enter Count and click Select first N to select voltage channels in file order. There is no scalp/EXG grouping. Verify the displayed names against your wiring.
 6. Select a timing reference for Stage 1. Stage 2 does not require one.
 7. Criteria now default to Frequency error = 0.1% and THD = 1%. Exclude final (s) defaults to 1 per file; set 0 to retain every sample. Analyze defaults to Selected record: Run analysis processes only the highlighted BDF. Choose All loaded records explicitly for linearity/repetition or batch analysis.
 8. Enable Build time windows for bench data (on by default). Set Window (s) = 10 and Step (s) = 1 for overlapping windows, or Step (s) = 10 for consecutive blocks. ECG always uses windows; its existing default step is 5 s. Run analysis calculates the windows in a background worker.
@@ -42,7 +45,7 @@ ECG and pulse signals are never passed through the sine-fit path. Declared wavef
 
 Changing any analysis input invalidates the old heatmap. The original BDF/ZIP files are never modified.
 
-Vpp verification belongs to each individual record. The checkbox says THIS record; Apply record (also applied automatically by Run analysis) stores it and updates the list's Verified column. Confirming one file never confirms the others. Batch warnings name their source files. Save project preserves all loaded records even when Analyze is set to Selected record.
+Input amplitudes and units are used automatically for each record, including loaded projects. Apply record or Run analysis saves edits; no Vpp confirmation checkbox or Verified column is shown. Missing amplitudes remain unavailable for absolute gain. Batch warnings name their source files. Save project preserves all loaded records even when Analyze is set to Selected record.
 
 ## Meaning of the colors and scope
 

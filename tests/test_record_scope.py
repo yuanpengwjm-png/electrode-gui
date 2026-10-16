@@ -1,4 +1,4 @@
-"""Regressions for per-file Vpp confirmation, analysis and displayed scope."""
+"""Regressions for automatic per-file input values, analysis and displayed scope."""
 from contextlib import contextmanager
 from dataclasses import replace
 import json
@@ -29,48 +29,48 @@ def app_for(records):
 
 
 class RecordScopeTests(unittest.TestCase):
-    def test_checkbox_applies_to_selected_file_and_run_applies_pending_edit(self):
+    def test_inputs_accepted_without_checkbox_and_run_applies_pending_edit(self):
         with fixture_folder() as folder:
             records = [replace(r, input_confirmed=False) for r in create_demo(folder, 2)[:2]]
             with app_for(records) as app:
-                app.confirmed.set(True)
+                app.record_vars['amplitude'].set(str(records[0].input_mVpp))
                 # A duplicate Tk selection event must not reset the user's edit.
                 app.select_record()
-                self.assertTrue(app.confirmed.get())
+                self.assertFalse(hasattr(app, 'confirmed'))
                 request = app.prepare()
                 chosen, settings, channels, reference = request
                 self.assertEqual(len(chosen), 1)
                 self.assertTrue(chosen[0].input_confirmed)
-                self.assertFalse(app.records[1].input_confirmed)
-                self.assertEqual(app.record_tree.item('0')['values'][-1], 'Yes')
-                self.assertEqual(app.record_tree.item('1')['values'][-1], 'No')
+                self.assertTrue(app.records[1].input_confirmed)
+                self.assertEqual(len(app.record_tree['columns']), 2)
                 self.assertEqual(len(app.prepare(all_records=True)[0]), 2)  # Save project retains all files.
                 result = AnalysisService(settings).analyze(chosen, channels, reference)
                 app.mode.set('Gain error')
                 app.accept_result(result)
                 self.assertEqual(app.displayed_electrodes()[0].gain.color, 'green')
                 self.assertNotIn('unconfirmed', app.detail.get('1.0', 'end'))
-                # The second, unprocessed file must not inherit file 1's result or checkbox.
+                # The second, unprocessed file must not inherit file 1's result.
                 app.record_tree.selection_set('1')
                 app.select_record()
-                self.assertFalse(app.confirmed.get())
+                self.assertTrue(app.records[1].input_confirmed)
                 self.assertIsNone(app.result)
                 chosen, settings, channels, reference = app.prepare()
                 result = AnalysisService(settings).analyze(chosen, channels, reference)
                 app.accept_result(result)
-                self.assertIn('unconfirmed', app.detail.get('1.0', 'end'))
+                self.assertEqual(app.displayed_electrodes()[0].gain.color, 'green')
 
-    def test_batch_confirmation_reasons_are_attributed_and_single_view_is_isolated(self):
+    def test_batch_missing_inputs_are_attributed_and_single_view_is_isolated(self):
         with fixture_folder() as folder:
             records = create_demo(folder, 2)[:2]
             records[1].input_confirmed = False
+            records[1].input_mVpp = None
             with app_for(records) as app:
                 app.analysis_target.set('All loaded records')
                 selected, settings, channels, reference = app.prepare()
                 result = AnalysisService(settings).analyze(selected, channels, reference)
                 aggregate = result.electrodes[0].gain
                 self.assertEqual(aggregate.color, 'yellow')
-                self.assertIn(records[1].id + ': Actual input Vpp is unconfirmed', aggregate.message)
+                self.assertIn(records[1].id + ': Actual input Vpp is missing', aggregate.message)
                 self.assertNotIn(records[0].id + ':', aggregate.message)
                 app.accept_result(result)
                 self.assertEqual(app.scope.get(), 'Record: ' + records[0].id)
@@ -79,7 +79,7 @@ class RecordScopeTests(unittest.TestCase):
                 app.scope.set('Record: ' + records[1].id)
                 app.change_scope()
                 self.assertEqual(app.selected, 1)
-                self.assertFalse(app.confirmed.get())
+                self.assertFalse(app.records[1].input_confirmed)
                 self.assertEqual(app.displayed_electrodes()[0].gain.color, 'yellow')
                 app.scope.set('All analyzed records / worst case')
                 app.change_scope()

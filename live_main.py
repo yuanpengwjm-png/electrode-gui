@@ -1,17 +1,20 @@
 """Packaged application entry. --live opens the live screen directly."""
+if __name__ == '__main__':
+    from runtime_bootstrap import ensure_project_runtime
+    ensure_project_runtime()
+
 import json
 from pathlib import Path
 import sys
 import time
 import tkinter as tk
-from gui import ElectrodeQAApp
+from views.workspace import WorkspaceApp
 
 
 def main():
-    root=tk.Tk();app=ElectrodeQAApp(root)
+    root=tk.Tk();app=WorkspaceApp(root)
     if '--live' in sys.argv or '--smoke-test' in sys.argv:
-        root.withdraw();app.open_live()
-        app.live_window.protocol('WM_DELETE_WINDOW',lambda:(app.live_window.close(),root.destroy()))
+        app.open_live()
     if '--smoke-test' in sys.argv:
         win=app.live_window;win.withdraw();win.start_demo()
         history=[];errors=[];started=time.monotonic()

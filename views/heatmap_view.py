@@ -13,6 +13,7 @@ class HeatmapView(ttk.Frame):
     def __init__(self, parent, on_select):
         super().__init__(parent)
         self.on_select, self.electrodes, self.mode = on_select, [], "current"
+        self.empty_text = "Choose BDF records and channels\nClick Run analysis"
         self.canvas = tk.Canvas(self, bg="#F4F7FA", highlightthickness=0)
         scroll = ttk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=scroll.set)
@@ -30,7 +31,7 @@ class HeatmapView(ttk.Frame):
         canvas.delete("all")
         width = max(240, canvas.winfo_width())
         if not self.electrodes:
-            canvas.create_text(width/2, 100, text="Choose BDF records and channels\nClick Run analysis", fill="#6B7A89", font=("Segoe UI", 15), justify="center")
+            canvas.create_text(width/2, 100, text=self.empty_text, fill="#6B7A89", font=("Segoe UI", 15), justify="center")
             canvas.configure(scrollregion=(0, 0, width, 200))
             return
         columns = max(1, min(len(self.electrodes), int(width/120)))

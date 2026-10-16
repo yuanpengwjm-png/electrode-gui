@@ -15,7 +15,9 @@ class AmplitudePeakGainError:
             return MetricResult("red", "No reliable response; check the electrode path and input", values)
         if fit["quality_reasons"]:
             return MetricResult("yellow", "Waveform quality is insufficient; repeat the gain test: "+", ".join(fit["quality_reasons"]), values)
-        if record.input_mVpp is None or not record.input_confirmed:
+        if record.input_mVpp is None:
+            return MetricResult("yellow", "Actual input Vpp is missing; absolute gain cannot be assessed", values)
+        if not record.input_confirmed:
             return MetricResult("yellow", "Actual input Vpp is unconfirmed; absolute gain cannot be assessed", values)
         color = self.settings.color(error, self.settings.gain_limit_pct)
         kind = "low" if error < 0 else "high"

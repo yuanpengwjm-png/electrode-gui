@@ -2,13 +2,22 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Electrode GUI",
+      "name": "Electrode QA - Real-time / Post",
       "type": "debugpy",
       "request": "launch",
-      "program": "${workspaceFolder}/gui.py",
+      "program": "${workspaceFolder}/live_main.py",
       "cwd": "${workspaceFolder}",
       "console": "integratedTerminal",
       "justMyCode": true
+    },
+    {
+      "name": "Real-time LSL",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "${workspaceFolder}/live_main.py",
+      "args": ["--live"],
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal"
     },
     {
       "name": "Demo GUI (8 electrodes)",

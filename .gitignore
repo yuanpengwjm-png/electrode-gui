@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 .venv/
 output/
+build-live/
+dist/
+Electrode_QA_Live/
+Electrode_QA_Live.zip

@@ -1,4 +1,8 @@
 """English two-stage desktop app. Algorithms are separate, GUI-independent classes."""
+if __name__ == '__main__':
+    from runtime_bootstrap import ensure_project_runtime
+    ensure_project_runtime()
+
 from dataclasses import asdict
 from pathlib import Path
 import copy
@@ -67,10 +71,11 @@ class ElectrodeQAApp:
         self.settings = AnalysisSettings(bench_windows=True)
         self.info = self.selected = self.result = None
         self.busy = self.loading = False
+        self.closed = False
+        self.poll_timer = None
         self.events = queue.Queue()
         self.controls, self.combos, self.bench_controls = ([], [], [])
         self.count = tk.StringVar(value='8')
-        self.pool = tk.StringVar(value='scalp')
         self.reference = tk.StringVar()
         self.profile = tk.StringVar(value=next(iter(PROFILES)))
         self.mode = tk.StringVar(value='Bench summary')
@@ -88,13 +93,12 @@ class ElectrodeQAApp:
         self.hint = tk.StringVar()
         self.lab_choice = tk.StringVar(value='10 electrodes - Sine')
         self.record_vars = {k: tk.StringVar() for k in ('frequency', 'amplitude', 'unit', 'repeat', 'setup', 'waveform')}
-        self.confirmed = tk.BooleanVar(value=False)
         self.sweep = tk.BooleanVar(value=True)
         self.limit_vars = {k: tk.StringVar(value='' if getattr(self.settings, k) is None else str(getattr(self.settings, k))) for k in CRITERIA}
         self.frame_labels = ['Not analyzed']
         self.result_scopes = {}
         self._build()
-        for variable in (*self.record_vars.values(), self.confirmed, self.sweep, self.windowed, *self.limit_vars.values(), self.count, self.pool, self.reference):
+        for variable in (*self.record_vars.values(), self.sweep, self.windowed, *self.limit_vars.values(), self.count, self.reference):
             variable.trace_add('write', self.invalidate)
         self.change_profile()
 
@@ -102,6 +106,9 @@ class ElectrodeQAApp:
         return PROFILES[self.profile.get()]
 
     def open_live(self):
+        if hasattr(self, 'workspace'):
+            self.workspace.open_live()
+            return
         from views.live_window import LiveWindow
         if self.live_window is None or not self.live_window.winfo_exists():
             self.live_window = LiveWindow(self.root, self.settings, self.torso_layout)
@@ -134,7 +141,8 @@ class ElectrodeQAApp:
         header.pack(fill='x')
         tk.Label(header, text='Electrode QA', bg='#182B3A', fg='white', font=('Segoe UI', 22, 'bold')).pack(side='left')
         tk.Label(header, text='Known-input validation / ECG quality screening', bg='#182B3A', fg='#BECDD9', font=('Segoe UI', 12)).pack(side='left', padx=25)
-        ttk.Button(header, text='Live LSL · Sine', command=self.open_live).pack(side='right')
+        ttk.Button(header, text='Post analysis (current)', state='disabled').pack(side='right', padx=8)
+        ttk.Button(header, text='Real-time', command=self.open_live).pack(side='right')
         flow = ttk.Frame(self.root, padding=(18, 10))
         flow.pack(fill='x')
         ttk.Label(flow, text='Analysis workflow').pack(side='left')
@@ -171,8 +179,8 @@ class ElectrodeQAApp:
         bar.pack(fill='x', pady=7)
         for title, fn in (('Open BDF / ZIP', self.add_files), ('Remove', self.remove_record), ('Clear', self.clear_records)):
             self.button(bar, title, fn).pack(side='left', padx=(0, 5))
-        self.record_tree = ttk.Treeview(parent, columns=('file', 'input', 'verified'), show='headings', height=5, selectmode='browse')
-        for key, title, width in (('file', 'Record', 245), ('input', 'mVpp', 60), ('verified', 'Verified', 65)):
+        self.record_tree = ttk.Treeview(parent, columns=('file', 'input'), show='headings', height=5, selectmode='browse')
+        for key, title, width in (('file', 'Record', 310), ('input', 'mVpp', 60)):
             self.record_tree.heading(key, text=title)
             self.record_tree.column(key, width=width)
         self.record_tree.pack(fill='x')
@@ -194,7 +202,7 @@ class ElectrodeQAApp:
         self.unit_combo = self.combo(form, self.record_vars['unit'], list(UNIT_FACTORS), 8)
         self.unit_combo.grid(row=3, column=2)
         self.bench_controls.append(self.unit_combo)
-        for row, title, var in ((5, 'Input Vpp and units verified for THIS record', self.confirmed), (6, 'Include in linearity sweep', self.sweep)):
+        for row, title, var in ((5, 'Include in linearity sweep', self.sweep),):
             w = ttk.Checkbutton(form, text=title, variable=var)
             w.grid(row=row, column=0, columnspan=3, sticky='w', pady=3)
             self.controls.append(w)
@@ -214,19 +222,18 @@ class ElectrodeQAApp:
         ttk.Label(parent, text='02  Channels and analysis', font=('Segoe UI', 13, 'bold')).pack(anchor='w')
         row = ttk.Frame(parent)
         row.pack(fill='x', pady=7)
-        ttk.Label(row, text='Group').pack(side='left')
-        self.combo(row, self.pool, ('scalp', 'EXG', 'all'), 7).pack(side='left', padx=5)
         ttk.Label(row, text='Count').pack(side='left')
         w = ttk.Spinbox(row, from_=1, to=4096, textvariable=self.count, width=5)
         w.pack(side='left', padx=5)
         self.controls.append(w)
-        self.button(row, 'Apply count', self.apply_count).pack(side='left')
+        self.button(row, 'Select first N', self.apply_count).pack(side='left')
         self.button(row, 'Choose channels', self.choose_channels).pack(side='left', padx=5)
         ttk.Label(row, text='Timing ref.').pack(side='left')
         self.ref_combo = self.combo(row, self.reference, (), 8)
         self.ref_combo.pack(side='left', padx=5)
         self.channel_label = ttk.Label(parent, text='No channels selected', wraplength=870, foreground='#657588')
         self.channel_label.pack(anchor='w', pady=4)
+        ttk.Label(parent, text='Select first N uses file order. Choose channels to match your actual wiring.', foreground='#657588').pack(anchor='w')
         target_row = ttk.Frame(parent)
         target_row.pack(fill='x', pady=3)
         ttk.Label(target_row, text='Analyze').pack(side='left')
@@ -331,7 +338,7 @@ class ElectrodeQAApp:
     def _build_help(self, parent):
         w = tk.Text(parent, wrap='word', font=('Segoe UI', 11), padx=12, pady=12, relief='flat')
         w.pack(fill='both', expand=True)
-        w.insert('1.0', 'STAGE 1 - KNOWN INPUT\nSine: gain, multi-level linearity, both zero-crossing directions, repeatability, SNR, SINAD, THD and frequency.\nPulse: plateau amplitude, both midpoint edges, frequency and repeats. Sine distortion metrics are not applied to pulses.\n\nSTAGE 2 - ECG QUALITY\nComplete 10 s windows, every 5 s by default. bSQI compares two different QRS detector methods. pSQI, Pearson kSQI, basSQI and flatline/clipping checks describe other properties. Worst component wins: this is a prototype screen.\n\nCOLORS AND SCOPE\nGreen: evaluated criteria within limits. Yellow: warning, insufficient data, uncalibrated tolerance or descriptive-only metric. Red: check required. No color proves electrode damage.\nAnalyze defaults to Selected record. Input Vpp verification belongs to THIS record only; the list shows Verified Yes/No. Apply record or Run analysis saves edits. Result scope starts at the first complete window when available; otherwise it shows the whole record. For linearity/repetition, choose All loaded records, run, then select All analyzed records / worst case. Batch warnings name their source records. ECG record scope uses the worst complete window within that file; select a Window for its actual values. Only complete windows are used. Exclude final (s) defaults to 1 per file, before all checks. A final full window ends at the retained interval end; short records are not padded or joined.\n\nTIME SLIDER\nBench: enable Build time windows, set Window to 10 s and Step to 1 s (or 10 s for blocks), then Run analysis. ECG always uses windows. Drag the slider, click the colored strip, or Play/Pause. Playback uses cached results and stops at the retained interval end. The strip shows the worst channel for the selected metric; Next alert finds the next yellow/red interval. Selected electrodes stay selected. Short bench files retain whole-record analysis but cannot supply a full window. A colored window locates an interval, not an exact fault onset. Windows are not independent repetitions.\n\nTIMING\nRising/falling events are matched separately within +/-T/4 windows. Missing events keep their index. Periodic signals cannot resolve whole-cycle absolute delays. REF is not independently verified.\n\nDATA AND LIMITS\nOnly select electrodes connected in the test. Do not pool different physical setups. Defaults: frequency error 0.1%, THD 1%. Clearing either limit marks acceptance uncalibrated. SQI thresholds are provisional. The app reads files offline; it does not connect to ActiView TCP.\n\nCODE\ngui.py -> AnalysisService -> waveform-specific classes -> MetricResult -> heatmap/export.\nDetailed Chinese walkthrough: CODE_GUIDE_ZH.md.')
+        w.insert('1.0', 'STAGE 1 - KNOWN INPUT\nSine: gain, multi-level linearity, both zero-crossing directions, repeatability, SNR, SINAD, THD and frequency.\nPulse: plateau amplitude, both midpoint edges, frequency and repeats. Sine distortion metrics are not applied to pulses.\n\nSTAGE 2 - ECG QUALITY\nComplete 10 s windows, every 5 s by default. bSQI compares two different QRS detector methods. pSQI, Pearson kSQI, basSQI and flatline/clipping checks describe other properties. Worst component wins: this is a prototype screen.\n\nCOLORS AND SCOPE\nGreen: evaluated criteria within limits. Yellow: warning, insufficient data, uncalibrated tolerance or descriptive-only metric. Red: check required. No color proves electrode damage.\nAnalyze defaults to Selected record. Input amplitude and units are used automatically for each record; no separate confirmation is required. Apply record or Run analysis saves edits. Result scope starts at the first complete window when available; otherwise it shows the whole record. For linearity/repetition, choose All loaded records, run, then select All analyzed records / worst case. Batch warnings name their source records. ECG record scope uses the worst complete window within that file; select a Window for its actual values. Only complete windows are used. Exclude final (s) defaults to 1 per file, before all checks. A final full window ends at the retained interval end; short records are not padded or joined.\n\nTIME SLIDER\nBench: enable Build time windows, set Window to 10 s and Step to 1 s (or 10 s for blocks), then Run analysis. ECG always uses windows. Drag the slider, click the colored strip, or Play/Pause. Playback uses cached results and stops at the retained interval end. The strip shows the worst channel for the selected metric; Next alert finds the next yellow/red interval. Selected electrodes stay selected. Short bench files retain whole-record analysis but cannot supply a full window. A colored window locates an interval, not an exact fault onset. Windows are not independent repetitions.\n\nTIMING\nRising/falling events are matched separately within +/-T/4 windows. Missing events keep their index. Periodic signals cannot resolve whole-cycle absolute delays. REF is not independently verified.\n\nDATA AND LIMITS\nOnly select electrodes connected in the test. Do not pool different physical setups. Defaults: frequency error 0.1%, THD 1%. Clearing either limit marks acceptance uncalibrated. SQI thresholds are provisional. The app reads files offline; it does not connect to ActiView TCP.\n\nCODE\ngui.py -> AnalysisService -> waveform-specific classes -> MetricResult -> heatmap/export.\nDetailed Chinese walkthrough: CODE_GUIDE_ZH.md.')
         w.configure(state='disabled')
 
     def change_profile(self, _=None):
@@ -399,7 +406,7 @@ class ElectrodeQAApp:
     def add_files(self):
         if not self.apply_record():
             return
-        paths = filedialog.askopenfilenames(filetypes=[('BDF recordings / ZIP archives', '*.bdf *.zip')])
+        paths = filedialog.askopenfilenames(parent=self.root, filetypes=[('BDF recordings / ZIP archives', '*.bdf *.zip')])
         if not paths:
             return
         try:
@@ -419,12 +426,13 @@ class ElectrodeQAApp:
                 self.initialize_channels()
             self.invalidate()
         except (ValueError, OSError, KeyError) as exc:
-            messagebox.showerror('Cannot read recording', str(exc))
+            messagebox.showerror('Cannot read recording', str(exc), parent=self.root)
 
     def refresh_records(self):
         self.selected = None
         self.record_tree.delete(*self.record_tree.get_children())
         for i, r in enumerate(self.records):
+            r.input_confirmed = self.has_input_amplitude(r)
             self.record_tree.insert('', 'end', iid=str(i), values=self.record_row(r))
         if self.records:
             self.record_tree.selection_set('0')
@@ -449,7 +457,6 @@ class ElectrodeQAApp:
         self.loading = True
         for key, value in dict(frequency=str(r.frequency_hz), amplitude='' if r.input_mVpp is None else str(r.input_mVpp), unit='mVpp', repeat=r.repeat_group, setup=r.setup_group, waveform=r.waveform).items():
             self.record_vars[key].set(value)
-        self.confirmed.set(r.input_confirmed)
         self.sweep.set(r.sweep)
         try:
             info = BdfReader().inspect(r)
@@ -467,9 +474,13 @@ class ElectrodeQAApp:
                 self.redraw()
 
     @staticmethod
+    def has_input_amplitude(record):
+        return (record.input_mVpp is not None
+                and math.isfinite(record.input_mVpp) and record.input_mVpp > 0)
+
+    @staticmethod
     def record_row(record):
-        return (record.id, record.input_mVpp if record.input_mVpp is not None else '?',
-                'Yes' if record.input_confirmed else 'No')
+        return (record.id, record.input_mVpp if record.input_mVpp is not None else '?')
 
     def apply_record(self):
         if self.selected is None:
@@ -487,9 +498,7 @@ class ElectrodeQAApp:
                     raise ValueError('Frequency must be positive')
                 if r.input_mVpp is not None and (not math.isfinite(r.input_mVpp) or r.input_mVpp <= 0):
                     raise ValueError('Input amplitude must be positive')
-                r.input_confirmed = bool(self.confirmed.get())
-                if r.input_confirmed and r.input_mVpp is None:
-                    raise ValueError('A confirmed input needs a value')
+                r.input_confirmed = self.has_input_amplitude(r)
                 r.sweep = bool(self.sweep.get())
                 r.repeat_group = self.record_vars['repeat'].get().strip()
             r.setup_group = self.record_vars['setup'].get().strip() or 'default'
@@ -498,29 +507,22 @@ class ElectrodeQAApp:
             self.record_tree.item(str(self.selected), values=self.record_row(r))
             return True
         except (ValueError, KeyError) as exc:
-            messagebox.showerror('Invalid record settings', str(exc))
+            messagebox.showerror('Invalid record settings', str(exc), parent=self.root)
             return False
 
     def initialize_channels(self, channels=None, reference=''):
         if not self.records:
             return
         self.info = BdfReader().inspect(self.records[0])
-        scalp = [c for c in self.info.voltage_labels if not c.upper().startswith('EXG')]
-        pool = 'scalp' if scalp else 'EXG'
         if channels and any((c not in self.info.voltage_labels for c in channels)):
             raise ValueError('Project channels are missing from the BDF')
         self.loading = True
         try:
-            self.pool.set(pool)
             if channels:
                 self.channels = list(channels)
-                if all((c.upper().startswith('EXG') for c in channels)):
-                    self.pool.set('EXG')
-                elif any((c.upper().startswith('EXG') for c in channels)):
-                    self.pool.set('all')
             else:
-                size = len(scalp) if scalp else len(self.info.voltage_labels)
-                self.channels = BdfReader.choose_channels(self.info, min(int(self.count.get()), size), pool)
+                size = len(self.info.voltage_labels)
+                self.channels = BdfReader.choose_channels(self.info, min(int(self.count.get()), size), 'all')
             self.count.set(str(len(self.channels)))
             self.reference.set(reference if reference in self.channels else self.channels[0])
             self.update_channel_label()
@@ -538,13 +540,13 @@ class ElectrodeQAApp:
         try:
             if self.info is None:
                 raise ValueError('Open a BDF first')
-            self.channels = BdfReader.choose_channels(self.info, int(self.count.get()), self.pool.get())
+            self.channels = BdfReader.choose_channels(self.info, int(self.count.get()), 'all')
             if self.reference.get() not in self.channels:
                 self.reference.set(self.channels[0])
             self.update_channel_label()
             self.invalidate()
         except ValueError as exc:
-            messagebox.showerror('Channel selection', str(exc))
+            messagebox.showerror('Channel selection', str(exc), parent=self.root)
 
     def choose_channels(self):
         if self.info is None:
@@ -602,7 +604,7 @@ class ElectrodeQAApp:
         settings = AnalysisSettings(**values)
         settings.validate()
         if int(self.count.get()) != len(self.channels):
-            raise ValueError('Count changed. Click Apply count to select actual BDF channels')
+            raise ValueError('Count changed. Click Select first N or Choose channels')
         reference = self.reference.get() if settings.analysis_mode != 'ecg' else ''
         records = self.records
         if not all_records and self.analysis_target.get() == 'Selected record':
@@ -637,10 +639,10 @@ class ElectrodeQAApp:
             self.status.set(f'Loaded {len(records)} records. Verify wiring and input calibration.')
         except (ValueError, OSError, KeyError, TypeError) as exc:
             self.loading = False
-            messagebox.showerror('Project load failed', str(exc))
+            messagebox.showerror('Project load failed', str(exc), parent=self.root)
 
     def load_dialog(self):
-        path = filedialog.askopenfilename(filetypes=[('JSON project', '*.json')])
+        path = filedialog.askopenfilename(parent=self.root, filetypes=[('JSON project', '*.json')])
         if path:
             self.load_path(path)
 
@@ -657,20 +659,20 @@ class ElectrodeQAApp:
             self.refresh_records()
             self.initialize_channels()
             self.invalidate()
-            self.status.set('Latest lab loaded. Input amplitudes are unconfirmed; no repeat groups were assigned automatically.')
+            self.status.set('Latest lab loaded. Available input amplitudes are used automatically; fill in missing values. No repeat groups assigned automatically.')
         except (ValueError, OSError) as exc:
-            messagebox.showerror('Lab preset', str(exc))
+            messagebox.showerror('Lab preset', str(exc), parent=self.root)
 
     def save_dialog(self):
         try:
             request = self.prepare(all_records=True)
             if request is None:
                 return
-            path = filedialog.asksaveasfilename(defaultextension='.json', filetypes=[('JSON project', '*.json')])
+            path = filedialog.asksaveasfilename(parent=self.root, defaultextension='.json', filetypes=[('JSON project', '*.json')])
             if path:
                 save_project(path, *request, display={'torso':asdict(self.torso_layout)})
         except (ValueError, OSError) as exc:
-            messagebox.showerror('Save failed', str(exc))
+            messagebox.showerror('Save failed', str(exc), parent=self.root)
 
     def load_demo(self):
         try:
@@ -686,7 +688,7 @@ class ElectrodeQAApp:
             self.invalidate()
             self.run()
         except (ValueError, OSError) as exc:
-            messagebox.showerror('Demo', str(exc))
+            messagebox.showerror('Demo', str(exc), parent=self.root)
 
     def set_busy(self, busy):
         self.busy = busy
@@ -719,11 +721,14 @@ class ElectrodeQAApp:
                 except Exception as exc:
                     self.events.put(('error', str(exc)))
             threading.Thread(target=worker, daemon=True).start()
-            self.root.after(80, self.poll)
+            self.poll_timer = self.root.after(80, self.poll)
         except (ValueError, OSError, KeyError) as exc:
-            messagebox.showerror('Cannot start analysis', str(exc))
+            messagebox.showerror('Cannot start analysis', str(exc), parent=self.root)
 
     def poll(self):
+        self.poll_timer = None
+        if self.closed:
+            return
         try:
             while True:
                 event, payload = self.events.get_nowait()
@@ -733,13 +738,24 @@ class ElectrodeQAApp:
                     self.set_busy(False)
                     if event == 'error':
                         self.status.set('Analysis failed. Check record, channel and mode settings.')
-                        messagebox.showerror('Analysis failed', payload)
+                        messagebox.showerror('Analysis failed', payload, parent=self.root)
                     else:
                         self.accept_result(payload)
         except queue.Empty:
             pass
         if self.busy:
-            self.root.after(80, self.poll)
+            self.poll_timer = self.root.after(80, self.poll)
+
+    def close(self):
+        self.closed = True
+        if self.poll_timer is not None:
+            self.root.after_cancel(self.poll_timer)
+            self.poll_timer = None
+        self.progress.stop()
+        self.timeline.pause()
+        if self.torso_window is not None:
+            self.torso_window.close()
+        self.root.destroy()
 
     def accept_result(self, result):
         self.result = result
@@ -881,8 +897,9 @@ class ElectrodeQAApp:
                 if kind == 'record' and run.record.id != record_id:
                     continue
                 value = run.channels[electrode.name]['sync'].values
-                verified = 'Yes' if run.record.input_confirmed else 'No'
-                lines.append(f"{run.record.id}: Vpp verified: {verified} | {run.duration_s:g} s, {run.sample_rate_hz:g} Hz | rising {value['rising_count']} / falling {value['falling_count']}")
+                amplitude = run.record.input_mVpp
+                input_text = f'{amplitude:g} mVpp' if amplitude is not None else 'not provided'
+                lines.append(f"{run.record.id}: Input: {input_text} | {run.duration_s:g} s, {run.sample_rate_hz:g} Hz | rising {value['rising_count']} / falling {value['falling_count']}")
         self.detail_text('\n'.join(lines))
         if self.torso_window is not None:
             self.torso_window.set_detail('\n'.join(lines),electrode.name)
@@ -908,12 +925,12 @@ class ElectrodeQAApp:
 
     def export(self):
         if self.result is None:
-            messagebox.showinfo('Export', 'Run analysis for the current settings first')
+            messagebox.showinfo('Export', 'Run analysis for the current settings first', parent=self.root)
             return
         self.timeline.pause()
         if self.torso_window is not None:
             self.torso_window.timeline.pause()
-        folder = filedialog.askdirectory(title='Choose report folder')
+        folder = filedialog.askdirectory(parent=self.root, title='Choose report folder')
         if folder:
             try:
                 demo = all((r.record.id.startswith('DEMO_') for r in self.result.runs))
@@ -925,8 +942,9 @@ class ElectrodeQAApp:
                     self.torso_window.save(folder)
                 self.status.set(f'Exported: {path}')
             except (ValueError, OSError) as exc:
-                messagebox.showerror('Export failed', str(exc))
+                messagebox.showerror('Export failed', str(exc), parent=self.root)
 if __name__ == '__main__':
-    root = tk.Tk()
-    ElectrodeQAApp(root)
-    root.mainloop()
+    # VS Code's Run Python File executes this module directly. Use the same
+    # mode selector and command-line options as the main application entry.
+    from main import main
+    main()

@@ -1,4 +1,8 @@
 """Run the desktop app, or analyze/export without a GUI for repeatable tests."""
+if __name__ == '__main__':
+    from runtime_bootstrap import ensure_project_runtime
+    ensure_project_runtime()
+
 from pathlib import Path
 import argparse
 from config import AnalysisSettings
@@ -45,6 +49,11 @@ def main():
         import tkinter as tk
         from gui import ElectrodeQAApp
         root = tk.Tk()
+        if not (args.config or args.demo or args.mode):
+            from views.workspace import WorkspaceApp
+            WorkspaceApp(root)
+            root.mainloop()
+            return
         app = ElectrodeQAApp(root)
         if args.config:
             app.load_path(args.config)

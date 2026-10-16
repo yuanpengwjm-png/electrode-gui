@@ -1,2 +1,2 @@
 @echo off
-start "" "%~dp0Electrode_QA_Live.exe" --live
+call "%~dp0Start_Electrode_QA.cmd" --live

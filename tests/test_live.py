@@ -72,7 +72,7 @@ class LiveTests(unittest.TestCase):
             receiver=SimpleNamespace(buffer=b,failure=None,clock_offset=None,is_alive=lambda:True,stop=lambda:stopped.append(True))
             win.receiver=receiver;win.meta=dict(demo=True,name='TEST',labels=['C11','C12'],units=['uV','uV'],nominal_srate=1024)
             win.channels=[dict(index=i,name=n,original_label=n,unit='uV',use=True) for i,n in enumerate(['C11','C12'])]
-            win.config=self.cfg;win.mapping.set(True);win.confirmed.set(True);win.monitoring=True
+            win.config=self.cfg;win.mapping.set(True);win.monitoring=True
             win.last_result=self.analyze();win.publish(win.last_result['electrodes'])
             self.assertTrue(all(e.metric('live').color=='green' for e in win.current))
             # A settings edit must invalidate both visible results and a queued old worker.
